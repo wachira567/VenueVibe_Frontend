@@ -16,6 +16,7 @@ import Contact from './pages/public/Contact';
 import VenueList from './pages/public/VenueList';
 import VenueDetails from './pages/public/VenueDetails';
 import Login from './pages/public/Login';
+import Register from './pages/public/Register';
 
 import ClientDashboard from './pages/client/ClientDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -37,6 +38,7 @@ function App() {
           <Route path="/venues" element={<VenueList />} />
           <Route path="/venues/:id" element={<VenueDetails />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* CLIENT ROUTES (User Only) */}
           <Route element={<ProtectedRoute allowedRoles={['Client', 'Admin']} />}>
