@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Calendar, Users, Star, ArrowRight } from 'lucide-react';
+import { AuroraBackground } from '../../components/ui/aurora-background';
+import { motion } from 'framer-motion';
 
 const Home = () => {
     const [searchLocation, setSearchLocation] = useState('');
@@ -44,11 +46,20 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-            {/* Hero Section */}
-            <div className="relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 py-20 lg:py-32">
+            {/* Hero Section with Aurora Background */}
+            <AuroraBackground>
+                <motion.div
+                    initial={{ opacity: 0.0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{
+                        delay: 0.3,
+                        duration: 0.8,
+                        ease: "easeInOut",
+                    }}
+                    className="relative flex flex-col gap-4 items-center justify-center px-4"
+                >
                     <div className="text-center">
-                        <h1 className="text-5xl lg:text-7xl font-black text-gray-900 mb-6">
+                        <h1 className="text-3xl md:text-7xl font-black dark:text-white text-center mb-6">
                             Find Your <span className="text-indigo-600">Perfect</span> Venue
                         </h1>
                         <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
@@ -95,14 +106,8 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-
-                {/* Background Pattern */}
-                <div className="absolute inset-0 -z-10 overflow-hidden">
-                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-200 rounded-full opacity-20"></div>
-                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full opacity-20"></div>
-                </div>
-            </div>
+                </motion.div>
+            </AuroraBackground>
 
             {/* Featured Venues */}
             <div className="py-20 bg-white">
