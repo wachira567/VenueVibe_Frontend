@@ -26,10 +26,14 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <ToastContainer position="bottom-right" />
-        
+
+        <button className="bg-red-600 text-white text-3xl font-bold p-10 m-10 border-4 border-black rounded-xl">
+          CAN YOU SEE ME?
+        </button>
+
         {/* The Navbar lives outside Routes so it's always visible (except admin maybe) */}
         <Navbar />
-        
+
         <Routes>
           {/* PUBLIC ROUTES */}
           <Route path="/" element={<Home />} />
