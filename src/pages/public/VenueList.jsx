@@ -12,16 +12,26 @@ const VenueList = () => {
     useEffect(() => {
         const fetchVenues = async () => {
             try {
-                const res = await api.get('/venues');
+                setLoading(true);
+
+                // Construct the URL with query parameters
+                // If locationFilter exists, it becomes: /venues?location=Karen
+                // If not, it stays: /venues
+                let url = '/venues';
+                if (locationFilter) {
+                    url += `?location=${locationFilter}`;
+                }
+
+                const res = await api.get(url);
                 setVenues(res.data);
             } catch (err) {
-                console.error("Failed to fetch venues");
+                console.error("Failed to fetch venues", err);
             } finally {
                 setLoading(false);
             }
         };
         fetchVenues();
-    }, [locationFilter]);
+    }, [locationFilter]); // This ensures it runs again if the user searches for a new place
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
