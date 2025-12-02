@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Components
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import WhatsAppFloat from './components/WhatsAppFloat';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -49,9 +50,12 @@ function App() {
           </Route>
         </Routes>
 
+        {/* Footer */}
+        <Footer />
+
         {/* Global Floating WhatsApp Button */}
         <WhatsAppFloat />
-        
+
       </AuthProvider>
     </BrowserRouter>
   );
