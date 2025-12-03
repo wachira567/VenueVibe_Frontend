@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import './Register.css';
 
 const Register = () => {
     const { login } = useContext(AuthContext);
@@ -44,110 +45,124 @@ const Register = () => {
         }
     };
 
+    const handleGoogleRegister = () => {
+        // Redirect browser to Backend Google Endpoint
+        window.location.href = `${import.meta.env.VITE_API_URL}/login/google`;
+    };
+
     return (
-        <div className="min-h-screen flex bg-gray-50">
-            {/* Left Side - Image */}
-            <div className="hidden lg:block w-1/2 relative">
-                <img
-                    src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    alt="Wedding"
-                />
-                <div className="absolute inset-0 bg-pink-900/60 flex items-center justify-center p-12">
-                    <div className="text-white max-w-lg">
-                        <h2 className="text-4xl font-bold mb-6">Join VenueVibe Today</h2>
-                        <p className="text-lg text-pink-100">"Find your perfect venue and create unforgettable memories."</p>
+        <div className="register-page">
+            <div className="register-container">
+                {/* Left Side - Image */}
+                <div className="register-image-section">
+                    <img
+                        src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                        className="register-image"
+                        alt="Wedding"
+                    />
+                    <div className="register-image-overlay">
+                        <div className="register-image-content">
+                            <h2 className="register-image-title">Join VenueVibe Today</h2>
+                            <p className="register-image-quote">"Find your perfect venue and create unforgettable memories."</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Right Side - Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-                <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
-                    <p className="text-gray-500 mb-8">Join thousands of happy event planners.</p>
+                {/* Right Side - Form */}
+                <div className="register-form-section">
+                    <div className="register-form-container">
+                        <h2 className="register-form-title">Create Account</h2>
+                        <p className="register-form-subtitle">Join thousands of happy event planners.</p>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="text-gray-400" size={20}/>
-                                </div>
-                                <input
-                                    type="text"
-                                    required
-                                    className="pl-10 w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-                                    placeholder="Choose a username"
-                                    value={formData.username}
-                                    onChange={(e) => setFormData({...formData, username: e.target.value})}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="text-gray-400" size={20}/>
-                                </div>
-                                <input
-                                    type="email"
-                                    required
-                                    className="pl-10 w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-                                    placeholder="Enter your email"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="text-gray-400" size={20}/>
-                                </div>
-                                <input
-                                    type="password"
-                                    required
-                                    className="pl-10 w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-                                    placeholder="Create a password"
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({...formData, password: e.target.value})}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="text-gray-400" size={20}/>
-                                </div>
-                                <input
-                                    type="password"
-                                    required
-                                    className="pl-10 w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-                                    placeholder="Confirm your password"
-                                    value={formData.confirmPassword}
-                                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                                />
-                            </div>
-                        </div>
-
+                        {/* Google Button */}
                         <button
-                            disabled={loading}
-                            className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition flex justify-center items-center gap-2"
+                            onClick={handleGoogleRegister}
+                            className="login-google-button"
                         >
-                            {loading ? "Creating account..." : "Create Account"} <ArrowRight size={20}/>
+                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="login-google-icon" alt="Google" />
+                            Continue with Google
                         </button>
-                    </form>
 
-                    <p className="mt-8 text-center text-gray-600">
-                        Already have an account?
-                        <Link to="/login" className="text-indigo-600 font-bold ml-1 hover:underline">Sign in</Link>
-                    </p>
+                        <div className="login-divider">
+                            <div className="login-divider-line"></div>
+                            <span className="login-divider-text">Or create with email</span>
+                            <div className="login-divider-line"></div>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="register-form">
+                            <div className="register-form-group">
+                                <label className="register-form-label">Username</label>
+                                <div className="register-form-input-wrapper">
+                                    <User className="register-form-icon" />
+                                    <input
+                                        type="text"
+                                        required
+                                        className="register-form-input"
+                                        placeholder="Choose a username"
+                                        value={formData.username}
+                                        onChange={(e) => setFormData({...formData, username: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="register-form-group">
+                                <label className="register-form-label">Email</label>
+                                <div className="register-form-input-wrapper">
+                                    <Mail className="register-form-icon" />
+                                    <input
+                                        type="email"
+                                        required
+                                        className="register-form-input"
+                                        placeholder="Enter your email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="register-form-group">
+                                <label className="register-form-label">Password</label>
+                                <div className="register-form-input-wrapper">
+                                    <Lock className="register-form-icon" />
+                                    <input
+                                        type="password"
+                                        required
+                                        className="register-form-input"
+                                        placeholder="Create a password"
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="register-form-group">
+                                <label className="register-form-label">Confirm Password</label>
+                                <div className="register-form-input-wrapper">
+                                    <Lock className="register-form-icon" />
+                                    <input
+                                        type="password"
+                                        required
+                                        className="register-form-input"
+                                        placeholder="Confirm your password"
+                                        value={formData.confirmPassword}
+                                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                disabled={loading}
+                                className="register-submit-button"
+                            >
+                                {loading ? "Creating account..." : "Create Account"} <ArrowRight className="register-submit-icon" />
+                            </button>
+                        </form>
+
+                        <p className="register-footer">
+                            Already have an account?
+                            <Link to="/login" className="register-footer-link">Sign in</Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

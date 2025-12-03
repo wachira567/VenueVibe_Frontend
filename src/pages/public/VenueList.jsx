@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Filter, MapPin, Users } from 'lucide-react';
+import { Filter, MapPin, Users, Search } from 'lucide-react';
 import api from '../../api/axios';
+import './VenueList.css';
 
 const VenueList = () => {
     const [venues, setVenues] = useState([]);
+    const [filteredVenues, setFilteredVenues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
     const locationFilter = searchParams.get('location');
+
+    // Filter states
+    const [sortBy, setSortBy] = useState('recommended');
+    const [categoryFilter, setCategoryFilter] = useState('all');
+    const [priceRange, setPriceRange] = useState('all');
+    const [capacityFilter, setCapacityFilter] = useState('all');
 
     useEffect(() => {
         const fetchVenues = async () => {
@@ -24,6 +32,7 @@ const VenueList = () => {
 
                 const res = await api.get(url);
                 setVenues(res.data);
+                setFilteredVenues(res.data); // Initialize filtered venues
             } catch (err) {
                 console.error("Failed to fetch venues", err);
             } finally {
@@ -33,59 +42,187 @@ const VenueList = () => {
         fetchVenues();
     }, [locationFilter]); // This ensures it runs again if the user searches for a new place
 
+    // Apply filters whenever filter states change
+    useEffect(() => {
+        let filtered = [...venues];
+
+        // Apply category filter
+        if (categoryFilter !== 'all') {
+            filtered = filtered.filter(venue => venue.category.toLowerCase() === categoryFilter.toLowerCase());
+        }
+
+        // Apply price range filter
+        if (priceRange !== 'all') {
+            switch (priceRange) {
+                case 'under-50000':
+                    filtered = filtered.filter(venue => venue.price_per_day < 50000);
+                    break;
+                case '50000-100000':
+                    filtered = filtered.filter(venue => venue.price_per_day >= 50000 && venue.price_per_day <= 100000);
+                    break;
+                case 'over-100000':
+                    filtered = filtered.filter(venue => venue.price_per_day > 100000);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Apply capacity filter
+        if (capacityFilter !== 'all') {
+            switch (capacityFilter) {
+                case 'small':
+                    filtered = filtered.filter(venue => venue.capacity <= 100);
+                    break;
+                case 'medium':
+                    filtered = filtered.filter(venue => venue.capacity > 100 && venue.capacity <= 300);
+                    break;
+                case 'large':
+                    filtered = filtered.filter(venue => venue.capacity > 300);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Apply sorting
+        switch (sortBy) {
+            case 'price-low':
+                filtered.sort((a, b) => a.price_per_day - b.price_per_day);
+                break;
+            case 'price-high':
+                filtered.sort((a, b) => b.price_per_day - a.price_per_day);
+                break;
+            case 'capacity':
+                filtered.sort((a, b) => b.capacity - a.capacity);
+                break;
+            case 'recommended':
+            default:
+                // Keep original order for recommended
+                break;
+        }
+
+        setFilteredVenues(filtered);
+    }, [venues, categoryFilter, priceRange, capacityFilter, sortBy]);
+
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <div className="max-w-7xl mx-auto px-4">
-
+        <div className="venue-list-page">
+            <div className="venue-list-container">
                 {/* Header & Filters */}
-                <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
-                        {locationFilter ? `Venues in "${locationFilter}"` : "All Venues"}
-                    </h1>
+                <div className="venue-list-header">
+                    <div>
+                        <h1 className="venue-list-title">
+                            {locationFilter ? `Venues in "${locationFilter}"` : "All Venues"}
+                        </h1>
+                        <p className="venue-list-subtitle">
+                            Discover the perfect venue for your special occasion from our curated collection
+                        </p>
+                    </div>
 
-                    <div className="flex gap-4 mt-4 md:mt-0">
-                        <select className="border p-2 rounded-lg bg-white shadow-sm">
-                            <option>Sort by: Recommended</option>
-                            <option>Price: Low to High</option>
-                            <option>Price: High to Low</option>
-                        </select>
-                        <button className="flex items-center gap-2 bg-white border px-4 py-2 rounded-lg shadow-sm hover:bg-gray-50">
-                            <Filter size={18}/> Filters
-                        </button>
+                    <div className="venue-list-controls">
+                        <div className="venue-list-filters">
+                            <select
+                                className="venue-list-select"
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                            >
+                                <option value="recommended">Sort by: Recommended</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="capacity">Capacity: High to Low</option>
+                            </select>
+
+                            <select
+                                className="venue-list-select"
+                                value={categoryFilter}
+                                onChange={(e) => setCategoryFilter(e.target.value)}
+                            >
+                                <option value="all">All Categories</option>
+                                <option value="wedding">Wedding</option>
+                                <option value="corporate">Corporate</option>
+                                <option value="beach">Beach</option>
+                                <option value="garden">Garden</option>
+                                <option value="hall">Hall</option>
+                            </select>
+
+                            <select
+                                className="venue-list-select"
+                                value={priceRange}
+                                onChange={(e) => setPriceRange(e.target.value)}
+                            >
+                                <option value="all">All Prices</option>
+                                <option value="under-50000">Under KES 50,000</option>
+                                <option value="50000-100000">KES 50,000 - 100,000</option>
+                                <option value="over-100000">Over KES 100,000</option>
+                            </select>
+
+                            <select
+                                className="venue-list-select"
+                                value={capacityFilter}
+                                onChange={(e) => setCapacityFilter(e.target.value)}
+                            >
+                                <option value="all">All Capacities</option>
+                                <option value="small">Small (≤100)</option>
+                                <option value="medium">Medium (101-300)</option>
+                                <option value="large">Large (300+)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                {/* Grid */}
+                {/* Venue Grid */}
                 {loading ? (
-                    <div className="text-center py-20">Loading venues...</div>
+                    <div className="venue-list-loading">
+                        <div className="venue-list-loading-spinner"></div>
+                        <p className="venue-list-loading-text">Discovering amazing venues...</p>
+                    </div>
+                ) : filteredVenues.length === 0 ? (
+                    <div className="venue-list-empty">
+                        <Search className="venue-list-empty-icon" />
+                        <h3 className="venue-list-empty-title">No venues found</h3>
+                        <p className="venue-list-empty-text">
+                            {locationFilter
+                                ? `We couldn't find any venues in "${locationFilter}". Try searching for a different location.`
+                                : "No venues are currently available. Check back soon!"
+                            }
+                        </p>
+                        <Link to="/" className="venue-list-empty-action">
+                            <Search size={18} />
+                            Browse All Venues
+                        </Link>
+                    </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {venues.map((venue) => (
-                            <Link to={`/venues/${venue.id}`} key={venue.id} className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300">
-                                <div className="h-64 overflow-hidden relative">
+                    <div className="venue-list-grid">
+                        {filteredVenues.map((venue) => (
+                            <Link to={`/venues/${venue.id}`} key={venue.id} className="venue-card">
+                                <div className="venue-image-container">
                                     <img
-                                        src={venue.image_url || "https://via.placeholder.com/600x400"}
+                                        src={venue.image_url || "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2098&auto=format&fit=crop"}
                                         alt={venue.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                        className="venue-image"
                                     />
-                                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-gray-800">
+                                    <div className="venue-category-badge">
                                         {venue.category}
                                     </div>
                                 </div>
 
-                                <div className="p-5">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition">{venue.name}</h3>
-                                        <span className="font-bold text-indigo-600">KES {venue.price_per_day.toLocaleString()}</span>
+                                <div className="venue-content">
+                                    <div className="venue-header">
+                                        <h3 className="venue-name">{venue.name}</h3>
+                                        <span className="venue-price">KES {venue.price_per_day.toLocaleString()}</span>
                                     </div>
 
-                                    <p className="flex items-center text-gray-500 text-sm mb-4">
-                                        <MapPin size={16} className="mr-1"/> {venue.location}
+                                    <p className="venue-location">
+                                        <MapPin className="venue-location-icon" />
+                                        {venue.location}
                                     </p>
 
-                                    <div className="flex items-center gap-4 text-sm text-gray-600 border-t pt-4">
-                                        <span className="flex items-center gap-1"><Users size={16}/> {venue.capacity} Guests</span>
-                                        <span className="flex items-center gap-1 text-green-600 font-medium">Available Now</span>
+                                    <div className="venue-footer">
+                                        <span className="venue-capacity">
+                                            <Users className="venue-capacity-icon" />
+                                            {venue.capacity} Guests
+                                        </span>
+                                        <span className="venue-availability">Available Now</span>
                                     </div>
                                 </div>
                             </Link>

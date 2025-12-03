@@ -1,20 +1,25 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import { Home, MapPin, Info, Phone, User, Heart, LogOut, LayoutDashboard, Menu, X } from 'lucide-react';
 import { cn } from '../utils/utils';
+import './Navbar.css';
 
 const Navbar = () => {
-    const { user, logout } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext) || {};
     const navigate = useNavigate();
     const location = useLocation();
     const [isMobile, setIsMobile] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const lastScrollY = useRef(0);
 
     // Get current active tab based on pathname
     const getActiveTab = () => {
         const path = location.pathname;
+        // Don't highlight any nav items on auth pages
+        if (path === '/login' || path === '/register') return null;
         if (path === '/') return 'Home';
         if (path === '/venues') return 'Venues';
         if (path === '/about') return 'About';
@@ -41,6 +46,26 @@ const Navbar = () => {
         setActiveTab(getActiveTab());
     }, [location.pathname]);
 
+    // Scroll detection for navbar visibility
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > lastScrollY.current && currentScrollY > 10) {
+                // Scrolling down and past 10px
+                setIsVisible(false);
+            } else if (currentScrollY < lastScrollY.current) {
+                // Scrolling up
+                setIsVisible(true);
+            }
+
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const handleLogout = () => {
         logout();
         navigate('/login');
@@ -65,55 +90,61 @@ const Navbar = () => {
 
     return (
         <>
-            {/* Tubelight Navbar */}
-            <div
-                className={cn(
-                    "fixed bottom-0 sm:top-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:pt-6",
-                )}
+            {/* Enhanced Smart Navbar */}
+            <motion.div
+                className={cn("navbar-container", isVisible ? "navbar-visible" : "navbar-hidden")}
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.3 }}
             >
-                <div className="flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
-                    {navItems.map((item) => {
-                        const Icon = item.icon;
-                        const isActive = activeTab === item.name;
+                <div className="navbar-wrapper">
+                    {/* Logo/Brand */}
+                    <div className="navbar-brand">
+                        <div className="navbar-logo">
+                            <span className="navbar-logo-text">V</span>
+                        </div>
+                        <span className="navbar-brand-text">VenueVibe</span>
+                    </div>
 
-                        return (
+                    {/* Navigation Items */}
+                    <div className="navbar-nav">
+                        {navItems.map((item) => {
+                            const Icon = item.icon;
+                            const isActive = activeTab === item.name;
+
+                            return (
+                                <Link
+                                    key={item.name}
+                                    to={item.url}
+                                    onClick={() => setActiveTab(item.name)}
+                                    className={cn("navbar-link", isActive && activeTab !== null && "navbar-link-active")}
+                                >
+                                    <Icon className="navbar-link-icon" />
+                                    <span className="navbar-link-text">{item.name}</span>
+                                </Link>
+                            );
+                        })}
+                    </div>
+
+                    {/* Auth Buttons (when not logged in) */}
+                    {!user && (
+                        <div className="navbar-auth">
                             <Link
-                                key={item.name}
-                                to={item.url}
-                                onClick={() => setActiveTab(item.name)}
-                                className={cn(
-                                    "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
-                                    "text-foreground/80 hover:text-primary",
-                                    isActive && "bg-muted text-primary",
-                                )}
+                                to="/login"
+                                className="navbar-auth-link"
                             >
-                                <span className="hidden md:inline">{item.name}</span>
-                                <span className="md:hidden">
-                                    <Icon size={18} strokeWidth={2.5} />
-                                </span>
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="lamp"
-                                        className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"
-                                        initial={false}
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 300,
-                                            damping: 30,
-                                        }}
-                                    >
-                                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full">
-                                            <div className="absolute w-12 h-6 bg-primary/20 rounded-full blur-md -top-2 -left-2" />
-                                            <div className="absolute w-8 h-6 bg-primary/20 rounded-full blur-md -top-1" />
-                                            <div className="absolute w-4 h-4 bg-primary/20 rounded-full blur-sm top-0 left-2" />
-                                        </div>
-                                    </motion.div>
-                                )}
+                                Sign In
                             </Link>
-                        );
-                    })}
+                            <Link
+                                to="/register"
+                                className="navbar-auth-button"
+                            >
+                                Sign Up
+                            </Link>
+                        </div>
+                    )}
                 </div>
-            </div>
+            </motion.div>
 
             {/* Mobile Auth Menu (only on mobile when user is logged in) */}
             {isMobile && user && (
@@ -128,7 +159,7 @@ const Navbar = () => {
                     {isOpen && (
                         <div className="absolute top-16 right-0 bg-white rounded-xl shadow-xl border border-gray-200 p-4 min-w-48">
                             <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
-                                <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center;">
                                     <span className="text-indigo-600 font-bold text-sm">
                                         {user.username.charAt(0).toUpperCase()}
                                     </span>
@@ -165,61 +196,6 @@ const Navbar = () => {
                 </div>
             )}
 
-            {/* Desktop Auth Section (top right) */}
-            {!isMobile && user && (
-                <div className="fixed top-6 right-6 z-40 flex items-center gap-4">
-                    {user.role === 'Admin' ? (
-                        <Link
-                            to="/admin"
-                            className="flex items-center gap-2 text-red-600 font-bold bg-red-50 px-4 py-2 rounded-full hover:bg-red-100 transition"
-                        >
-                            <LayoutDashboard size={18} /> Admin Panel
-                        </Link>
-                    ) : (
-                        <>
-                            <Link
-                                to="/saved"
-                                title="Saved Venues"
-                                className="text-gray-400 hover:text-pink-500 transition p-2 rounded-full hover:bg-white/50"
-                            >
-                                <Heart size={24} />
-                            </Link>
-                            <Link
-                                to="/dashboard"
-                                className="flex items-center gap-2 text-gray-700 font-medium hover:text-indigo-600 transition p-2 rounded-full hover:bg-white/50"
-                            >
-                                <User size={20} /> My Account
-                            </Link>
-                        </>
-                    )}
-
-                    <button
-                        onClick={handleLogout}
-                        className="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-white/50"
-                        title="Logout"
-                    >
-                        <LogOut size={20} />
-                    </button>
-                </div>
-            )}
-
-            {/* Desktop Auth Section (when not logged in) */}
-            {!isMobile && !user && (
-                <div className="fixed top-6 right-6 z-40 flex items-center gap-3">
-                    <Link
-                        to="/login"
-                        className="text-gray-600 hover:text-indigo-600 font-medium px-4 py-2 rounded-full hover:bg-white/50 transition"
-                    >
-                        Log In
-                    </Link>
-                    <Link
-                        to="/register"
-                        className="bg-indigo-600 text-white px-5 py-2.5 rounded-full font-bold hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/30 transition transform hover:-translate-y-0.5"
-                    >
-                        Sign Up
-                    </Link>
-                </div>
-            )}
         </>
     );
 };
