@@ -26,11 +26,18 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        console.log("Axios interceptor: Error response", error.response?.status, error.response?.config?.url);
         if (error.response?.status === 401) {
             // Token expired or invalid
+            console.log("Axios interceptor: Clearing token due to 401");
             localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            localStorage.removeItem('role');
+            localStorage.removeItem('user_id');
             window.location.href = '/login';
+        } else if (error.response?.status === 422) {
+            // Unprocessable entity - check if it's auth-related
+            console.log("Axios interceptor: 422 error details:", error.response?.data);
+            // For now, don't auto-clear on 422 - might be validation errors
         }
         return Promise.reject(error);
     }
