@@ -1,16 +1,45 @@
-# React + Vite
+# VenueVibe - Venue Booking Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application for discovering and booking event venues.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend:** https://venue-vibe-frontend-dnazcszbw-washiras-projects-fb5072e5.vercel.app/
+- **Backend API:** https://venuevibe-backend.onrender.com
+- **API Documentation:** https://venuevibe-backend.onrender.com/docs
 
-## React Compiler
+## 📁 Repositories
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend Repository:** https://github.com/wachira567/VenueVibe_Frontend
+- **Backend Repository:** https://github.com/wachira567/VenueVibe_Backend
 
-## Expanding the ESLint configuration
+## 🚀 Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Venue discovery and booking
+- User authentication (Email & Google OAuth)
+- Saved venues functionality
+- Real-time availability checking
+- Invoice generation
+- Responsive design
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- React 18
+- Vite
+- Tailwind CSS
+- Axios
+- React Router
+
+### Backend
+
+- FastAPI
+- PostgreSQL
+- SQLAlchemy
+- JWT Authentication
+- Cloudinary (Image Upload)
+
+## 📞 Contact
+
+For questions or support, please reach out through the contact form on the website.
