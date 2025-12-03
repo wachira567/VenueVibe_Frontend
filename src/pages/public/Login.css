@@ -1,0 +1,278 @@
+/* Login Page Styles */
+
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  background: white;
+}
+
+.login-image-section {
+  flex: 1;
+  position: relative;
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .login-image-section {
+    display: block;
+  }
+}
+
+.login-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.8) 0%, rgba(124, 58, 237, 0.8) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.login-image-content {
+  color: white;
+  max-width: 28rem;
+  text-align: center;
+}
+
+.login-image-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.login-image-quote {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+/* Form Section */
+.login-form-section {
+  flex: 1;
+  padding: 3rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 600px;
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.login-form-title {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-form-subtitle {
+  color: #6b7280;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+/* Google Button */
+.login-google-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.login-google-button:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-google-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Divider */
+.login-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+.login-divider-line {
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.login-divider-text {
+  padding: 0 1rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.login-form-input-wrapper {
+  position: relative;
+}
+
+.login-form-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  width: 1.25rem;
+  height: 1.25rem;
+  pointer-events: none;
+}
+
+.login-form-input {
+  width: 100%;
+  padding: 0.875rem 0.875rem 0.875rem 3rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  color: #374151;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.login-form-input:focus {
+  outline: none;
+  border-color: #f43f5e;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1);
+}
+
+.login-form-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Submit Button */
+.login-submit-button {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.login-submit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(244, 63, 94, 0.3);
+}
+
+.login-submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-submit-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Footer */
+.login-footer {
+  margin-top: 2rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.login-footer-link {
+  color: #f43f5e;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-footer-link:hover {
+  color: #ec4899;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .login-form-section {
+    padding: 2rem 1.5rem;
+    min-height: auto;
+  }
+
+  .login-form-container {
+    max-width: 100%;
+  }
+
+  .login-form-title {
+    font-size: 2rem;
+  }
+}
