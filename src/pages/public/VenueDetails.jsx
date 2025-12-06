@@ -182,7 +182,7 @@ const VenueDetails = () => {
     if (
       !bookingData.event_date ||
       bookingData.guest_count < 1 ||
-      !bookingData.contact_email
+      !bookingData.contact_phone
     ) {
       // No toast notification for validation errors
       return;
@@ -193,10 +193,9 @@ const VenueDetails = () => {
       return;
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(bookingData.contact_email)) {
-      // No toast notification for email validation errors
+    // Phone validation (basic check for required field)
+    if (!bookingData.contact_phone.trim()) {
+      // No toast notification for phone validation errors
       return;
     }
 
@@ -687,7 +686,7 @@ const VenueDetails = () => {
                 </div>
 
                 <div className="venue-booking-field">
-                  <label className="venue-booking-label">Contact Email *</label>
+                  <label className="venue-booking-label">Contact Email (Optional)</label>
                   <input
                     type="email"
                     value={bookingData.contact_email}
@@ -699,17 +698,15 @@ const VenueDetails = () => {
                     }
                     className="venue-booking-input"
                     placeholder="your.email@example.com"
-                    required
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    📧 We'll use this email to send booking confirmations and
-                    updates
+                    📧 Optional: We'll use this email to send booking confirmations and updates
                   </p>
                 </div>
 
                 <div className="venue-booking-field">
                   <label className="venue-booking-label">
-                    Contact Phone (Optional)
+                    Contact Phone *
                   </label>
                   <input
                     type="tel"
@@ -722,10 +719,10 @@ const VenueDetails = () => {
                     }
                     className="venue-booking-input"
                     placeholder="+254 700 000 000"
+                    required
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    📞 We'll call this number if we need to reach you about your
-                    booking
+                    📱 Required: We'll send SMS notifications about your booking to this number
                   </p>
                 </div>
 
@@ -840,7 +837,7 @@ const VenueDetails = () => {
                   disabled={
                     !bookingData.event_date ||
                     bookingData.guest_count > venue.capacity ||
-                    !bookingData.contact_email
+                    !bookingData.contact_phone.trim()
                   }
                   className="venue-booking-submit"
                 >
