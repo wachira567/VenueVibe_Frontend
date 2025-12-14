@@ -8,7 +8,7 @@ VenueVibe is a comprehensive venue booking platform that connects event organize
 
 ## Live Deployment
 
-- **Frontend Application:** https://venue-vibe-frontend-git-main-washiras-projects-fb5072e5.vercel.app
+- **Frontend Application:** https://venue-vibe-frontend-git-main-washiras-projects-fb5072e5.vercel.app/
 - **Backend API:** https://venuevibe-backend.onrender.com/
 
 ## Repository Links
